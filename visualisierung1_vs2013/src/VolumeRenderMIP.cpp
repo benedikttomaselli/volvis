@@ -1,12 +1,9 @@
-//Kolb Mathias, 0625588
-//Tomaselli Benedikt, 0926048
-
-#include "VR.h"
+#include "VolumeRender.h"
 
 
 //performs raycasting at pixel (x,y)
 //returns the maximum value
-vector<int> VR_MIP::castRay(int x, int y, int zDim, bool invert, bool alt, int step, ViewDirection vd)
+vector<int> VolumeRenderMIP::castRay(int x, int y, int zDim, bool invert, bool alt, int step, ViewDirection vd)
 {
 	float currValue = 0;
 	float maxIntensity = 0;
@@ -29,12 +26,12 @@ vector<int> VR_MIP::castRay(int x, int y, int zDim, bool invert, bool alt, int s
 
 }
 
-VR_MIP::VR_MIP(Shading* shading)
+VolumeRenderMIP::VolumeRenderMIP(GradientShading* grad)
 {
-	shading = shading;
+	gradient = grad;
 }
 
 
-VR_MIP::~VR_MIP()
+VolumeRenderMIP::~VolumeRenderMIP()
 {
 }

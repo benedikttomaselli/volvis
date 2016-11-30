@@ -1,10 +1,7 @@
-//Kolb Mathias, 0625588
-//Tomaselli Benedikt, 0926048
-
-#include "VR.h"
+#include "VolumeRender.h"
 
 
-vector<int> VR_FirstHit::castRay(int x, int y, int zDim, bool invert, bool alt, int step, ViewDirection vd){
+vector<int> VolumeRenderFirstHit::castRay(int x, int y, int zDim, bool invert, bool alt, int step, ViewDirection vd){
 	float currValue = 0;
 	bool found = false;
 	int retZ=0;
@@ -20,19 +17,19 @@ vector<int> VR_FirstHit::castRay(int x, int y, int zDim, bool invert, bool alt, 
 	return vector<int> {c, c, 0, retZ};
 }
 
-void VR_FirstHit::setThreshold(float t){
+void VolumeRenderFirstHit::setThreshold(float t){
 	if (0 <= t && t <= 1){
 		threshold = t;
 	}
 }
 
 
-VR_FirstHit::VR_FirstHit(Shading* shading)
+VolumeRenderFirstHit::VolumeRenderFirstHit(GradientShading* grad)
 {
-	shading = shading;
+	gradient = grad;
 }
 
 
-VR_FirstHit::~VR_FirstHit()
+VolumeRenderFirstHit::~VolumeRenderFirstHit()
 {
 }

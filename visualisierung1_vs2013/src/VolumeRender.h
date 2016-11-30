@@ -5,18 +5,18 @@
 #include <QPainter>
 #include <QLabel>
 #include <QRgb>
-#include "Shading.h"
+#include "GradientShading.h"
 
 
 
 using namespace std;
 
-class VR
+class VolumeRender
 {
 public:
-	VR(Shading* shading);
-	VR();
-	~VR();
+	VolumeRender(GradientShading* grad);
+	VolumeRender();
+	~VolumeRender();
 
 	enum ViewDirection{
 		TOP = 0,
@@ -33,39 +33,39 @@ public:
 protected:
 	Volume toDraw;
 	float getVoxelValue(int x, int y, int z, ViewDirection vd);
-	Shading* shading;
+	GradientShading* gradient;
 	vector<float> fillVoxelValues(int x, int y, int z, int xDim, int yDim, int zDim, ViewDirection vd);
 };
 
-class VR_MIP :
-	public VR
+class VolumeRenderMIP :
+	public VolumeRender
 {
 public:
 	vector<int> castRay(int x, int y, int zDim, bool invert, bool alt, int step, ViewDirection vd) override;
-	VR_MIP(Shading* shading);
-	~VR_MIP();
+	VolumeRenderMIP(GradientShading* grad);
+	~VolumeRenderMIP();
 };
 
-class VR_AlphaCompositing :
-	public VR
+class VolumeRenderAlphaComp :
+	public VolumeRender
 
 {
 public:
 	vector<int> castRay(int x, int y, int zDim, bool invert, bool alt, int step, ViewDirection vd) override;
-	VR_AlphaCompositing(Shading* shading);
-	~VR_AlphaCompositing();
+	VolumeRenderAlphaComp(GradientShading* grad);
+	~VolumeRenderAlphaComp();
 private:
 	vector<int> transfer(float value, bool invert);
 	vector<int> Over(vector<int> a, vector<int> b, float alpha);
 };
 
-class VR_FirstHit :
-	public VR
+class VolumeRenderFirstHit :
+	public VolumeRender
 {
 public:
 	vector<int> castRay(int x, int y, int zDim, bool invert, bool alt, int step, ViewDirection vd) override;
-	VR_FirstHit(Shading* shading);
-	~VR_FirstHit();
+	VolumeRenderFirstHit(GradientShading* grad);
+	~VolumeRenderFirstHit();
 	void setThreshold(float t);
 
 private:

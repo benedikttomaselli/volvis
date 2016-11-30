@@ -4,14 +4,14 @@
 
 using namespace std;
 
-class Shading
+class GradientShading
 {
 public:
-	Shading();
-	~Shading();
+	GradientShading();
+	~GradientShading();
 
 	vector<int> shadeVoxel(vector<float> voxelValues, vector<int> shadePosition);
-	vector<float> calculateshading(vector<float> voxelValues);
+	vector<float> calculateGradient(vector<float> voxelValues);
 	//	float convolute(vector<float> values, vector<int> kernel);
 	void SetLightIntensity(float i);
 

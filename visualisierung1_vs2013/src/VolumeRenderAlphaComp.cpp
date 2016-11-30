@@ -1,18 +1,15 @@
-//Kolb Mathias, 0625588
-//Tomaselli Benedikt, 0926048
-
-#include "VR.h"
+#include "VolumeRender.h"
 
 
 
 
-VR_AlphaCompositing::VR_AlphaCompositing(Shading* shading)
+VolumeRenderAlphaComp::VolumeRenderAlphaComp(GradientShading* grad)
 {
-	shading = shading;
+	gradient = grad;
 }
 
 
-vector<int> VR_AlphaCompositing::castRay(int x, int y, int zDim, bool invert, bool alt, int step, ViewDirection vd)
+vector<int> VolumeRenderAlphaComp::castRay(int x, int y, int zDim, bool invert, bool alt, int step, ViewDirection vd)
 {
 
 	vector<int> color = { 0, 0, 0 };
@@ -37,7 +34,7 @@ vector<int> VR_AlphaCompositing::castRay(int x, int y, int zDim, bool invert, bo
 
 }
 
-vector<int> VR_AlphaCompositing::transfer(float value, bool invert){
+vector<int> VolumeRenderAlphaComp::transfer(float value, bool invert){
 	vector<int> ret(3);
 	ret[0] = round(abs((1 - invert) - value) * 255);
 	ret[1] = round(abs(invert - value) * 255);
@@ -47,7 +44,7 @@ vector<int> VR_AlphaCompositing::transfer(float value, bool invert){
 
 }
 
-vector<int> VR_AlphaCompositing::Over(vector<int> a, vector<int> b, float alpha){
+vector<int> VolumeRenderAlphaComp::Over(vector<int> a, vector<int> b, float alpha){
 	vector<int> ret(3);
 	for (int i = 0; i < 3; i++){
 		ret[i] = round(alpha*a[i] + (1 - alpha)*b[i]);
@@ -55,7 +52,7 @@ vector<int> VR_AlphaCompositing::Over(vector<int> a, vector<int> b, float alpha)
 	return ret;
 }
 
-VR_AlphaCompositing::~VR_AlphaCompositing()
+VolumeRenderAlphaComp::~VolumeRenderAlphaComp()
 {
 
 }

@@ -1,28 +1,28 @@
-//Kolb Mathias, 0625588
-//Tomaselli Benedikt, 0926048
-
 #include "MainWindow.h"
+
 #include <QFileDialog>
+
 #include <QPainter>
+
 #include <QtOpenGL>
 #include <QColor>
 #include "QLineEdit.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
-	: QMainWindow(parent), m_Volume(0), image(new QImage(500, 500, QImage::Format_RGB32))		//draw 500 pixel square
+	: QMainWindow(parent), m_Volume(0), image(new QImage(500, 500, QImage::Format_RGB32))
 {
-	invert = false;		//initialize inveft with boolean = false
+	invert = false;
 	m_Ui = new Ui_MainWindow();
 	m_Ui->setupUi(this);
 
-	Shading* shading = new Shading;		//initialize shading class for gradient shading
-	MIP = new VR_MIP(shading);		//initialize class for Maximum-Intensity-Projection
-	FH = new VR_FirstHit(shading);		//initialize class for First Hit
-	AC = new VR_AlphaCompositing(shading);		//initialize class for Alpha-Compositing
-	renderer = MIP;		//renderer set to Maximum-Intensity-Projection as default
+	GradientShading* grad = new GradientShading;
+	MIP = new VolumeRenderMIP(grad);
+	FH = new VolumeRenderFirstHit(grad);
+	AC = new VolumeRenderAlphaComp(grad);
+	renderer = MIP;
 
-	vd = VR::TOP;
+	vd = VolumeRender::TOP;
 
 
 
@@ -34,9 +34,9 @@ MainWindow::MainWindow(QWidget *parent)
 	qlabel->setPixmap(QPixmap::fromImage(*image));
 	imageLay->addWidget(qlabel);
 	QHBoxLayout *buttonsView = new QHBoxLayout();
-	QPushButton *top = new QPushButton("top");		//button for top-view of object
-	QPushButton *side = new QPushButton("side");		//button for side-view of object
-	QPushButton *front = new QPushButton("front");		//button for frontal-view of object
+	QPushButton *top = new QPushButton("top");
+	QPushButton *side = new QPushButton("side");
+	QPushButton *front = new QPushButton("front");
 	buttonsView->addWidget(top);
 	buttonsView->addWidget(side);
 	buttonsView->addWidget(front);
@@ -53,18 +53,14 @@ MainWindow::MainWindow(QWidget *parent)
 
 	buttons->addLayout(stepLabel);
 
-	QPushButton *invertBtn = new QPushButton("invert");		//button to invert color
-	invertBtn->setFixedWidth(200);
+	QPushButton *invertBtn = new QPushButton("invert");
 	buttons->addWidget(invertBtn);
-	QPushButton *btnMIP = new QPushButton("Maximum-Intensity-Projection");		//button to selet Maximum-Intensity-Projection
-	btnMIP->setFixedWidth(200);
+	QPushButton *btnMIP = new QPushButton("MIP");
 	buttons->addWidget(btnMIP);
-	QPushButton *btnAC = new QPushButton("Alpha Compositing");		//button to selet Alpha Compositing
-	btnAC->setFixedWidth(200);
+	QPushButton *btnAC = new QPushButton("Alpha Compositing");
 	buttons->addWidget(btnAC);
 	QHBoxLayout * fh = new QHBoxLayout();
-	QPushButton *btnFH = new QPushButton("First Hit");		//button to selet First Hit method
-	btnFH->setFixedWidth(200);
+	QPushButton *btnFH = new QPushButton("First Hit");
 	fh->addWidget(btnFH);
 	threshInput = new QLineEdit();
 	threshInput->setFixedWidth(50);
@@ -79,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent)
 	intensityInput->setFixedWidth(50);
 	intensityInput->setValidator(new QDoubleValidator(0.0, 1.0, 4));
 	intensityLabel->addWidget(intensityInput);
-	QLabel *intensityL = new QLabel("light intensity");		//button to selet the light intensity
+	QLabel *intensityL = new QLabel("light intensity");
 	intensityLabel->addWidget(intensityL);
 	buttons->addLayout(intensityLabel);
 
@@ -88,7 +84,7 @@ MainWindow::MainWindow(QWidget *parent)
 	ambientInput->setFixedWidth(50);
 	ambientInput->setValidator(new QDoubleValidator(0.0, 1.0, 4));
 	ambientLabel->addWidget(ambientInput);
-	QLabel *ambientL = new QLabel("ambient light intensity");		//button to selet the ambient light intensity
+	QLabel *ambientL = new QLabel("ambient light intensity");
 	ambientLabel->addWidget(ambientL);
 	buttons->addLayout(ambientLabel);
 
@@ -97,7 +93,7 @@ MainWindow::MainWindow(QWidget *parent)
 	m_Ui->centralwidget->setLayout(vlay);
 
 	//Set image to draw
-	//connecting the object on the canvas with the slots
+
 
 
 	connect(invertBtn, SIGNAL(clicked()), this, SLOT(invertClicked()));
@@ -122,6 +118,7 @@ MainWindow::MainWindow(QWidget *parent)
 	alt = false;
 }
 
+
 MainWindow::~MainWindow()
 {
 	delete m_Volume;
@@ -138,7 +135,6 @@ MainWindow::~MainWindow()
 //-------------------------------------------------------------------------------------------------
 // Slots
 //-------------------------------------------------------------------------------------------------
-
 void MainWindow::invertClicked(){
 	invert = !invert;
 	if (m_Volume){
@@ -217,26 +213,31 @@ void MainWindow::ambientChanged(){
 }
 
 void MainWindow::TOPClicked(){
-	vd = VR::TOP;
+	vd = VolumeRender::TOP;
 	if (m_Volume){
 		renderer->setVolume(*m_Volume);
 		renderer->drawVolume(image, qlabel, invert, alt, step, vd);
 	}
 }
 void MainWindow::SIDEClicked(){
-	vd = VR::SIDE;
+	vd = VolumeRender::SIDE;
 	if (m_Volume){
 		renderer->setVolume(*m_Volume);
 		renderer->drawVolume(image, qlabel, invert, alt, step, vd);
 	}
 }
 void MainWindow::FRONTClicked(){
-	vd = VR::FRONT;
+	vd = VolumeRender::FRONT;
 	if (m_Volume){
 		renderer->setVolume(*m_Volume);
 		renderer->drawVolume(image, qlabel, invert, alt, step, vd);
 	}
 }
+
+
+//-------------------------------------------------------------------------------------------------
+// Slots
+//-------------------------------------------------------------------------------------------------
 
 void MainWindow::openFileAction()
 {
@@ -262,9 +263,6 @@ void MainWindow::openFileAction()
 
 			// load file
 			success = m_Volume->loadFromFile(filename, m_Ui->progressBar);
-
-			renderer->setVolume(*m_Volume);
-			renderer->drawVolume(image, qlabel, invert, alt, step, vd);
 		}
 		else if (fn.substr(fn.find_last_of(".") + 1) == "gri")		// LOAD VECTORFIELD
 		{

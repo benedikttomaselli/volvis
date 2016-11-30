@@ -1,6 +1,3 @@
-//Kolb Mathias, 0625588
-//Tomaselli Benedikt, 0926048
-
 #include "Vector.h"
 
 #include <math.h>

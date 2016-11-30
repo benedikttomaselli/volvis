@@ -37,19 +37,19 @@
     <ClCompile Include="src\MultiSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VR.cpp">
+    <ClCompile Include="src\GradientShading.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VR_AlphaComp.cpp">
+    <ClCompile Include="src\VolumeRender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VR_FirstHit.cpp">
+    <ClCompile Include="src\VolumeRenderAlphaComp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VR_MIP.cpp">
+    <ClCompile Include="src\VolumeRenderFirstHit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shading.cpp">
+    <ClCompile Include="src\VolumeRenderMIP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,10 +77,10 @@
     <ClInclude Include="src\MultiSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\VR.h">
+    <ClInclude Include="src\GradientShading.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Shading.h">
+    <ClInclude Include="src\VolumeRender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
